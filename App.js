@@ -46,7 +46,7 @@ export default class App extends Component {
 
   startTimer() {
 
-    let seconds = 60*10
+    let currSeconds = 60*10
 
     // https://github.com/ocetnik/react-native-background-timer
     BackgroundTimer.runBackgroundTimer(() => {

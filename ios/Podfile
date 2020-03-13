@@ -34,22 +34,7 @@ target 'medit8' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  # pod 'RNSound', :path => '../node_modules/react-native-sound'
-
-  target 'medit8Tests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
 
   use_native_modules!
-end
-
-target 'medit8-tvOS' do
-  # Pods for medit8-tvOS
-
-  target 'medit8-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end
