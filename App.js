@@ -18,6 +18,11 @@ import Sound from 'react-native-sound';
 import BackgroundTimer from 'react-native-background-timer';
 
 import styles from './shared/styles';
+import utils from './shared/utils';
+
+
+const INITIAL_TEXT = '0:05';
+const ONE_SEC_IN_MILLI = 1000;
 
 
 export default class App extends Component {
@@ -26,8 +31,9 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      text: '1:00',
-      sessionInProgress: false
+      text: INITIAL_TEXT,
+      sessionInProgress: false,
+      timersList: [5],
     };
 
     this.initializeSound();
@@ -51,31 +57,40 @@ export default class App extends Component {
 
   resetTimer() {
     this.setState({
-      text: '1:00',
-      sessionInProgress: false
+      text: INITIAL_TEXT,
+      sessionInProgress: false,
     });
     BackgroundTimer.stopBackgroundTimer();
   }
 
   startTimer() {
-    let currSeconds = 60;
+    this.countDown(this.unshiftTimers());
+  }
 
+  // Safely unshift first timer.
+  unshiftTimers() {
+    const oldState = this.state;
+    this.setState({timersList: oldState.timersList.slice(1)});
+    return oldState.timersList[0];
+  }
+
+  countDown(secondsRemaining) {
     BackgroundTimer.runBackgroundTimer(() => {
-      let secondHand = currSeconds % 60;
-      secondHand = (secondHand === 0) ? '00' : secondHand;
-      secondHand = (secondHand !== '00' && secondHand < 10) ? `0${secondHand}` : secondHand;
-
-      let displayTimer = `${Math.floor(currSeconds/60)}:${secondHand}`;
+      const secondsHand = utils.getSecondsHand(secondsRemaining);
+      const minutesHand = utils.getMinutesHand(secondsRemaining);
+      let displayTimer = `${minutesHand}:${secondsHand}`;
 
       this.setState({
         text: displayTimer
       });
-      if (currSeconds === 0) {
+
+      if (secondsRemaining < 1) {
         this.stopSession();
+        console.log(secondsRemaining);
         this.playTone();
       }
-        currSeconds--;
-    }, 1000);
+        secondsRemaining--;
+    }, ONE_SEC_IN_MILLI);
   }
 
   beginSession() {
