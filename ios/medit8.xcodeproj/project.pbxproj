@@ -11,11 +11,9 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		9C24F14F24251BD200BC098A /* chime.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9C24F14E24251BD100BC098A /* chime.mp3 */; };
 		B13D0773F052C1F045A5F4D7 /* libPods-medit8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 623FBA8EA6B935E4CFAEA512 /* libPods-medit8.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -35,6 +33,7 @@
 		7167AEAD579F7324849D41C2 /* Pods-medit8.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-medit8.release.xcconfig"; path = "Target Support Files/Pods-medit8/Pods-medit8.release.xcconfig"; sourceTree = "<group>"; };
 		89ABED3E7CA3711676002B19 /* libPods-medit8-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-medit8-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B6FB4627AE50EE782535BEE /* Pods-medit8-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-medit8-tvOS.release.xcconfig"; path = "Target Support Files/Pods-medit8-tvOS/Pods-medit8-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		9C24F14E24251BD100BC098A /* chime.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chime.mp3; sourceTree = "<group>"; };
 		A704D411F6B1F0C0B2DBC989 /* Pods-medit8Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-medit8Tests.debug.xcconfig"; path = "Target Support Files/Pods-medit8Tests/Pods-medit8Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E5663B0F3CED293BEF1C9907 /* libPods-medit8Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-medit8Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -106,6 +105,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				9C24F14E24251BD100BC098A /* chime.mp3 */,
 				13B07FAE1A68108700A75B9A /* medit8 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -175,8 +175,6 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* medit8 */,
@@ -184,14 +182,12 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C24F14F24251BD200BC098A /* chime.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -292,6 +288,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = RCZLWPC7U5;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = medit8/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -304,9 +301,6 @@
 				PRODUCT_NAME = medit8;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-				);
 			};
 			name = Debug;
 		};
@@ -319,6 +313,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RCZLWPC7U5;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = medit8/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -331,9 +326,6 @@
 				PRODUCT_NAME = medit8;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-				);
 			};
 			name = Release;
 		};
