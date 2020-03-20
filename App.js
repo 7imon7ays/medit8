@@ -98,9 +98,6 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Meditation Timer</Text>
-        </View>
         <Text style={styles.timer}>{this.state.text}</Text>
         { !this.state.sessionInProgress &&
           <TouchableOpacity style={styles.beginButton} onPress={this.beginSession}>

@@ -30,20 +30,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 26
   },
-  header: {
-    position: 'absolute',
-    top: 0,
-    height: 60,
-    width: '100%',
-    backgroundColor: '#4CAF50'
-  },
-  headerText: {
-    fontSize: 24,
-    color: '#fff',
-    paddingTop: 15,
-    paddingLeft: 10,
-    textAlign: 'center'
-  },
 })
 
 
