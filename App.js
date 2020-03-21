@@ -50,7 +50,7 @@ export default class App extends Component {
     });
   }
 
-  playTone() {
+  chime() {
     this.chimeSound.play();
   }
 
@@ -77,14 +77,14 @@ export default class App extends Component {
 
       if (secondsRemaining < 1) {
         this.stopSession();
-        this.playTone();
+        this.chime();
       }
         secondsRemaining--;
     }, ONE_SEC_IN_MILLI);
   }
 
   beginSession() {
-    this.playTone();
+    this.chime();
     this.startTimer();
 
     this.setState({
