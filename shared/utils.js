@@ -16,11 +16,8 @@ const utils = {
 };
 
 const getSecondsHand = secondsRemaining => {
-  let secondsHand = secondsRemaining % 60;
+  const secondsHand = secondsRemaining % 60;
 
-  if (secondsHand === 0) {
-    return '00';
-  }
   if (secondsHand < 10) {
     return `0${secondsHand}`
   }
@@ -29,10 +26,12 @@ const getSecondsHand = secondsRemaining => {
 };
 
 const getMinutesHand = secondsRemaining => {
-  // TODO: Prepend '0' when less than 10.
-  return String(
-    Math.floor(secondsRemaining / 60),
-  );
+  const minutesHand = Math.floor(secondsRemaining / 60);
+  if (minutesHand < 10) {
+    return `0${minutesHand}`
+  }
+
+  return String(minutesHand);
 };
 
 export default utils;
