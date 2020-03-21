@@ -7,10 +7,11 @@
  */
 import React, {Component} from 'react';
 import {
-    Text, 
-    TouchableOpacity,
-    View,
-  } from 'react-native';
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import Sound from 'react-native-sound';
 // https://github.com/ocetnik/react-native-background-timer
@@ -39,6 +40,7 @@ export default class App extends Component {
 
     this.beginSession = this.beginSession.bind(this);
     this.stopSession = this.stopSession.bind(this);
+    this.handleEditTimer = this.handleEditTimer.bind(this);
   }
 
   initializeSound() {
@@ -107,18 +109,39 @@ export default class App extends Component {
     BackgroundTimer.clearInterval(this._interval);
   }
 
+  handleEditTimer(text) {
+    const asNumber = utils.textInputToNumber(text);
+    console.log(asNumber);
+    this.setState({text: asNumber});
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.timer}>{this.state.text}</Text>
+
+        <TextInput
+          style={styles.timer}
+          keyboardType='numeric'
+          onChangeText={this.handleEditTimer}
+        >{this.state.text}
+        </TextInput>
+
         { !this.state.sessionInProgress &&
-          <TouchableOpacity style={styles.beginButton} onPress={this.beginSession}>
-            <Text style={styles.colorWhite}>Begin</Text>
+          <
+            TouchableOpacity
+            style={styles.beginButton} onPress={this.beginSession}
+          >
+            <Text style={styles.colorWhite}>BEGIN</Text>
           </TouchableOpacity>
         }
+
         { this.state.sessionInProgress &&
-          <TouchableOpacity style={styles.stopButton} onPress={this.stopSession}>
-            <Text style={styles.colorWhite}>Stop</Text>
+          <
+            TouchableOpacity
+            style={styles.stopButton}
+            onPress={this.stopSession}
+          >
+            <Text style={styles.colorWhite}>STOP</Text>
           </TouchableOpacity>
         }
       </View>

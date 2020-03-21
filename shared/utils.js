@@ -15,6 +15,13 @@ const utils = {
   getMinutesHand: secondsRemaining => {
     return Math.floor(secondsRemaining / 60);
   },
+
+  textInputToNumber: text => {
+    const numChars = text.split('')
+      .filter(character => character >= '0' && character <= '9').
+      join('');
+    return parseInt(numChars);
+  },
 };
 
 export default utils;
