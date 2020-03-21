@@ -19,6 +19,7 @@ import Sound from 'react-native-sound';
 // https://github.com/ocetnik/react-native-background-timer
 import BackgroundTimer from 'react-native-background-timer';
 
+import TimerView from './shared/TimerView';
 import styles from './shared/styles';
 import utils from './shared/utils';
 
@@ -99,7 +100,7 @@ export default class App extends Component {
       secondsRemaining: 0,
       sessionInProgress: false,
     });
-    BackgroundTimer.clearInterval(this._interval);
+    this.clearTimerInterval()
   }
 
   handleEditTimer(text) {
@@ -112,19 +113,12 @@ export default class App extends Component {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
 
-        { !this.state.sessionInProgress &&
-          <TextInput
-            style={styles.timer}
-            keyboardType='numeric'
-            onChangeText={this.handleEditTimer}
-          >{DEFAULT_TIME_MIN}</TextInput>
-        }
-        { this.state.sessionInProgress &&
-          <Text
-            style={styles.timer}
-          >{utils.formatTimeRemaining(this.state.secondsRemaining)}
-          </Text>
-        }
+        <
+          TimerView
+          handleEditTimer={this.handleEditTimer}
+          secondsRemaining={this.state.secondsRemaining}
+          sessionInProgress={this.state.sessionInProgress}
+        />
 
         { !this.state.sessionInProgress &&
           <
@@ -150,6 +144,10 @@ export default class App extends Component {
 
   componentWillUmount() {
     this.chimeSound.release();
-    BackgroundTimer.stopBackgroundTimer();
+    this.clearTimerInterval();
+  }
+
+  clearTimerInterval() {
+    BackgroundTimer.clearInterval(this._interval);
   }
 }
