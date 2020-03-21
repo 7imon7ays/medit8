@@ -24,13 +24,14 @@ import utils from './shared/utils';
 
 
 const ONE_SEC_IN_MILLI = 1000;
+const DEFAULT_TIME_MIN = 1;
 
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
-    this._interval = null;  // Placeholder until time starts.
+    this._interval = null;
 
     this.state = {
       secondsRemaining: 5,
@@ -103,7 +104,7 @@ export default class App extends Component {
 
   handleEditTimer(text) {
     const asNumber = utils.textInputToNumber(text);
-    this.setState({secondsRemaining: asNumber});
+    this.setState({secondsRemaining: asNumber * 60});
   }
 
   render() {
@@ -111,12 +112,19 @@ export default class App extends Component {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
 
-        <TextInput
-          style={styles.timer}
-          keyboardType='numeric'
-          onChangeText={this.handleEditTimer}
-        >{utils.formatTimeRemaining(this.state.secondsRemaining)}
-        </TextInput>
+        { !this.state.sessionInProgress &&
+          <TextInput
+            style={styles.timer}
+            keyboardType='numeric'
+            onChangeText={this.handleEditTimer}
+          >{DEFAULT_TIME_MIN}</TextInput>
+        }
+        { this.state.sessionInProgress &&
+          <Text
+            style={styles.timer}
+          >{utils.formatTimeRemaining(this.state.secondsRemaining)}
+          </Text>
+        }
 
         { !this.state.sessionInProgress &&
           <
@@ -126,7 +134,6 @@ export default class App extends Component {
             <Text style={styles.colorWhite}>BEGIN</Text>
           </TouchableOpacity>
         }
-
         { this.state.sessionInProgress &&
           <
             TouchableOpacity
