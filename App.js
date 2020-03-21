@@ -7,10 +7,9 @@
  */
 import React, {Component} from 'react';
 import {
-    Platform, 
     Text, 
-    View,
     TouchableOpacity,
+    View,
   } from 'react-native';
 
 import Sound from 'react-native-sound';
@@ -55,14 +54,6 @@ export default class App extends Component {
     this.chimeSound.play();
   }
 
-  resetTimer() {
-    this.setState({
-      text: INITIAL_TEXT,
-      sessionInProgress: false,
-    });
-    BackgroundTimer.stopBackgroundTimer();
-  }
-
   startTimer() {
     this.countDown(this.unshiftTimers());
   }
@@ -75,7 +66,7 @@ export default class App extends Component {
   }
 
   countDown(secondsRemaining) {
-    BackgroundTimer.runBackgroundTimer(() => {
+    this._interval = BackgroundTimer.setInterval(() => {
       const secondsHand = utils.getSecondsHand(secondsRemaining);
       const minutesHand = utils.getMinutesHand(secondsRemaining);
       let displayTimer = `${minutesHand}:${secondsHand}`;
@@ -86,7 +77,6 @@ export default class App extends Component {
 
       if (secondsRemaining < 1) {
         this.stopSession();
-        console.log(secondsRemaining);
         this.playTone();
       }
         secondsRemaining--;
@@ -109,6 +99,13 @@ export default class App extends Component {
     });
   }
 
+  resetTimer() {
+    this.setState({
+      text: INITIAL_TEXT,
+      sessionInProgress: false,
+    });
+    BackgroundTimer.clearInterval(this._interval);
+  }
 
   render() {
     return (
