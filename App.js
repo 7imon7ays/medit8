@@ -8,9 +8,6 @@
 import React, {Component} from 'react';
 import {
   Keyboard,
-  Text,
-  TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -19,6 +16,7 @@ import Sound from 'react-native-sound';
 // https://github.com/ocetnik/react-native-background-timer
 import BackgroundTimer from 'react-native-background-timer';
 
+import ButtonView from './shared/ButtonView';
 import TimerView from './shared/TimerView';
 import styles from './shared/styles';
 import utils from './shared/utils';
@@ -120,23 +118,13 @@ export default class App extends Component {
           sessionInProgress={this.state.sessionInProgress}
         />
 
-        { !this.state.sessionInProgress &&
-          <
-            TouchableOpacity
-            style={styles.beginButton} onPress={this.beginSession}
-          >
-            <Text style={styles.colorWhite}>BEGIN</Text>
-          </TouchableOpacity>
-        }
-        { this.state.sessionInProgress &&
-          <
-            TouchableOpacity
-            style={styles.stopButton}
-            onPress={this.stopSession}
-          >
-            <Text style={styles.colorWhite}>STOP</Text>
-          </TouchableOpacity>
-        }
+        <
+          ButtonView
+          beginSession={this.beginSession}
+          stopSession={this.stopSession}
+          sessionInProgress={this.state.sessionInProgress}
+        />
+
         </View>
       </TouchableWithoutFeedback>
     );
