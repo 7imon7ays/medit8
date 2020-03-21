@@ -21,7 +21,6 @@ import styles from './shared/styles';
 import utils from './shared/utils';
 
 
-const INITIAL_TEXT = '0:05';
 const ONE_SEC_IN_MILLI = 1000;
 
 
@@ -30,10 +29,12 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    this._interval = null;  // Placeholder until time starts.
+
     this.state = {
-      text: INITIAL_TEXT,
+      secondsRemaining: 5,
       sessionInProgress: false,
-      timersList: [5],
+      timersList: [],
     };
 
     this.initializeSound();
@@ -57,32 +58,22 @@ export default class App extends Component {
   }
 
   startTimer() {
-    this.countDown(this.unshiftTimers());
+    this._interval = BackgroundTimer.setInterval(() => {
+      this.setState({secondsRemaining: this.state.secondsRemaining - 1});
+
+      if (this.state.secondsRemaining < 1) {
+        this.stopSession();
+        this.chime();
+      }
+    }, ONE_SEC_IN_MILLI);
   }
 
   // Safely unshift first timer.
+  // TODO: Currently unused.
   unshiftTimers() {
     const oldState = this.state;
     this.setState({timersList: oldState.timersList.slice(1)});
     return oldState.timersList[0];
-  }
-
-  countDown(secondsRemaining) {
-    this._interval = BackgroundTimer.setInterval(() => {
-      const secondsHand = utils.getSecondsHand(secondsRemaining);
-      const minutesHand = utils.getMinutesHand(secondsRemaining);
-      let displayTimer = `${minutesHand}:${secondsHand}`;
-
-      this.setState({
-        text: displayTimer
-      });
-
-      if (secondsRemaining < 1) {
-        this.stopSession();
-        this.chime();
-      }
-        secondsRemaining--;
-    }, ONE_SEC_IN_MILLI);
   }
 
   beginSession() {
@@ -103,7 +94,7 @@ export default class App extends Component {
 
   resetTimer() {
     this.setState({
-      text: INITIAL_TEXT,
+      secondsRemaining: 0,
       sessionInProgress: false,
     });
     BackgroundTimer.clearInterval(this._interval);
@@ -111,8 +102,7 @@ export default class App extends Component {
 
   handleEditTimer(text) {
     const asNumber = utils.textInputToNumber(text);
-    console.log(asNumber);
-    this.setState({text: asNumber});
+    this.setState({secondsRemaining: asNumber});
   }
 
   render() {
@@ -123,7 +113,7 @@ export default class App extends Component {
           style={styles.timer}
           keyboardType='numeric'
           onChangeText={this.handleEditTimer}
-        >{this.state.text}
+        >{utils.formatTimeRemaining(this.state.secondsRemaining)}
         </TextInput>
 
         { !this.state.sessionInProgress &&
