@@ -7,9 +7,11 @@
  */
 import React, {Component} from 'react';
 import {
+  Keyboard,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 
@@ -25,7 +27,6 @@ const ONE_SEC_IN_MILLI = 1000;
 
 
 export default class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -107,7 +108,8 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
 
         <TextInput
           style={styles.timer}
@@ -134,7 +136,8 @@ export default class App extends Component {
             <Text style={styles.colorWhite}>STOP</Text>
           </TouchableOpacity>
         }
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 

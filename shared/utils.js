@@ -6,10 +6,12 @@ const utils = {
   },
 
   textInputToNumber: text => {
+
     const numChars = text.split('')
       .filter(character => character >= '0' && character <= '9').
       join('');
-    return parseInt(numChars);
+
+    return numChars === '' ? 0 : parseInt(numChars);
   },
 };
 
