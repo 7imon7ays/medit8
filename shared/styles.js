@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 80,
     textAlign: 'center',
-    margin: 10,
   },
   beginButton: {
     margin: 40,
