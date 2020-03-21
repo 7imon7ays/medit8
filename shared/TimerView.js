@@ -5,11 +5,17 @@ import styles from './styles';
 import utils from './utils';
 
 
+const MAX_DIGITS = 2;
+
+
 export default class TimerView extends Component {
   render() {
-    const minutesHand = utils.getMinutesHand(this.props.secondsRemaining);
-    const secondsHand = utils.getSecondsHand(this.props.secondsRemaining);
-    const timeRemainingText = utils.buildTimeRemainingText(this.props.secondsRemaining);
+    const minutesHand = utils.getMinutesHand(this.props.minutesNum);
+    const secondsHand = utils.getSecondsHand(this.props.secondsNum);
+
+    const timeRemainingText = utils.buildTimeRemainingText(
+      this.props.secondsRemaining,
+    );
 
     return (
       <View>
@@ -18,13 +24,16 @@ export default class TimerView extends Component {
           <View style={{flexDirection: 'row'}}>
             <TextInput style={styles.timer}
               keyboardType='numeric'
-              onChangeText={this.props.handleEditTimer}
+              onChangeText={this.props.handleEditMinutes}
+              maxLength={MAX_DIGITS}
             >
               {minutesHand}
             </TextInput>
             <Text style={styles.timer}>:</Text>
             <TextInput style={styles.timer}
-            keyboardType='numeric'
+              keyboardType='numeric'
+              onChangeText={this.props.handleEditSeconds}
+              maxLength={MAX_DIGITS}
             >
               {secondsHand}
             </TextInput>

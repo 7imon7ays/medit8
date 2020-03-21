@@ -24,6 +24,7 @@ import utils from './shared/utils';
 
 const ONE_SEC_IN_MILLI = 1000;
 const DEFAULT_TIME_MIN = 1;
+const DEFAULT_MN_SECS = {minutesNum: 0, secondsNum: 5};
 
 
 export default class App extends Component {
@@ -33,7 +34,8 @@ export default class App extends Component {
     this._interval = null;
 
     this.state = {
-      secondsRemaining: 5,
+      ...DEFAULT_MN_SECS,
+      secondsRemaining: 0,
       sessionInProgress: false,
       timersList: [],
     };
@@ -42,7 +44,8 @@ export default class App extends Component {
 
     this.beginSession = this.beginSession.bind(this);
     this.stopSession = this.stopSession.bind(this);
-    this.handleEditTimer = this.handleEditTimer.bind(this);
+    this.handleEditMinutes = this.handleEditMinutes.bind(this);
+    this.handleEditSeconds = this.handleEditSeconds.bind(this);
   }
 
   initializeSound() {
@@ -59,6 +62,9 @@ export default class App extends Component {
   }
 
   startTimer() {
+    const secondsRemaining = this.state.minutesNum*60 + this.state.secondsNum;
+    this.setState({secondsRemaining});
+
     this._interval = BackgroundTimer.setInterval(() => {
       this.setState({secondsRemaining: this.state.secondsRemaining - 1});
 
@@ -95,15 +101,22 @@ export default class App extends Component {
 
   resetTimer() {
     this.setState({
-      secondsRemaining: 0,
       sessionInProgress: false,
     });
     this.clearTimerInterval()
   }
 
-  handleEditTimer(text) {
-    const asNumber = utils.textInputToNumber(text);
-    this.setState({secondsRemaining: asNumber * 60});
+  handleEditMinutes(text) {
+    this._handleEdit(text, 'minutesNum');
+  }
+
+  handleEditSeconds(text) {
+    this._handleEdit(text, 'secondsNum');
+  }
+
+  _handleEdit(text, hand) {
+    const asNumber = utils.textInputToTwoDigitNumber(text);
+    this.setState({[hand]: asNumber});
   }
 
   render() {
@@ -113,7 +126,10 @@ export default class App extends Component {
 
         <
           TimerView
-          handleEditTimer={this.handleEditTimer}
+          minutesNum={this.state.minutesNum}
+          secondsNum={this.state.secondsNum}
+          handleEditMinutes={this.handleEditMinutes}
+          handleEditSeconds={this.handleEditSeconds}
           secondsRemaining={this.state.secondsRemaining}
           sessionInProgress={this.state.sessionInProgress}
         />
