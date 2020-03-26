@@ -5,14 +5,28 @@ import styles from './styles';
 import utils from './utils';
 
 
+// Minute and second hands can only have two digits.
 const MAX_DIGITS = 2;
 
 
 export default class TimerView extends Component {
-  render() {
-    const minutesHand = utils.getMinutesHand(this.props.minutesNum);
-    const secondsHand = utils.getSecondsHand(this.props.secondsNum);
+  constructor(props) {
+    super(props);
+    this.handleEditMinutes = this.handleEditMinutes.bind(this);
+    this.handleEditSeconds = this.handleEditSeconds.bind(this);
+  }
 
+  handleEditMinutes(text) {
+    this.props.handleEditMinutes(text, this.props.idx);
+  }
+
+  handleEditSeconds(text) {
+    this.props.handleEditSeconds(text, this.props.idx);
+  }
+
+  // TODO: Only countdown the timer with index 0.
+  // Other timers should be still and optionally editable.
+  render() {
     const timeRemainingText = utils.buildTimeRemainingText(
       this.props.secondsRemaining,
     );
@@ -20,28 +34,30 @@ export default class TimerView extends Component {
     return (
       <View>
 
-        { !this.props.sessionInProgress &&
+        {
+          !this.props.sessionInProgress &&
           <View style={{flexDirection: 'row'}}>
             <TextInput style={styles.timer}
               keyboardType='numeric'
-              onChangeText={this.props.handleEditMinutes}
+              onChangeText={this.handleEditMinutes}
               maxLength={MAX_DIGITS}
             >
-              {minutesHand}
+              {this.props.minutesNum}
             </TextInput>
             <Text style={styles.timer}>:</Text>
             <TextInput style={styles.timer}
               keyboardType='numeric'
-              onChangeText={this.props.handleEditSeconds}
+              onChangeText={this.handleEditSeconds}
               maxLength={MAX_DIGITS}
             >
-              {secondsHand}
+              {this.props.secondsNum}
             </TextInput>
           </View>
         }
 
 
-        { this.props.sessionInProgress &&
+        {
+          this.props.sessionInProgress &&
           <Text style={styles.timer}>{timeRemainingText}</Text>
         }
 

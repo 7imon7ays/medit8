@@ -7,6 +7,8 @@
  */
 import React, {Component} from 'react';
 import {
+  Button,
+  FlatList,
   Keyboard,
   TouchableWithoutFeedback,
   View,
@@ -23,7 +25,6 @@ import utils from './shared/utils';
 
 
 const ONE_SEC_IN_MILLI = 1000;
-const DEFAULT_TIME_MIN = 1;
 const DEFAULT_MN_SECS = {minutesNum: 0, secondsNum: 5};
 
 
@@ -34,10 +35,9 @@ export default class App extends Component {
     this._interval = null;
 
     this.state = {
-      ...DEFAULT_MN_SECS,
       secondsRemaining: 0,
       sessionInProgress: false,
-      timersList: [],
+      timersList: [DEFAULT_MN_SECS],
     };
 
     this.initializeSound();
@@ -46,6 +46,8 @@ export default class App extends Component {
     this.stopSession = this.stopSession.bind(this);
     this.handleEditMinutes = this.handleEditMinutes.bind(this);
     this.handleEditSeconds = this.handleEditSeconds.bind(this);
+    this.handleAddTimer = this.handleAddTimer.bind(this);
+    this.buildTimer = this.buildTimer.bind(this);
   }
 
   initializeSound() {
@@ -62,7 +64,8 @@ export default class App extends Component {
   }
 
   startTimer() {
-    const secondsRemaining = this.state.minutesNum*60 + this.state.secondsNum;
+    const currentTimer = this.state.timersList[0];
+    const secondsRemaining = currentTimer.minutesNum*60 + currentTimer.secondsNum;
     this.setState({secondsRemaining});
 
     this._interval = BackgroundTimer.setInterval(() => {
@@ -73,6 +76,12 @@ export default class App extends Component {
         this.chime();
       }
     }, ONE_SEC_IN_MILLI);
+  }
+
+  addTimer() {
+    this.setState({
+      timersList: this.state.timersList.concat([DEFAULT_MN_SECS]),
+    });
   }
 
   // Safely unshift first timer.
@@ -106,33 +115,82 @@ export default class App extends Component {
     this.clearTimerInterval()
   }
 
-  handleEditMinutes(text) {
-    this._handleEdit(text, 'minutesNum');
+  handleEditMinutes(text, idx) {
+    this._handleEdit(text, idx, 'minutesNum');
   }
 
-  handleEditSeconds(text) {
-    this._handleEdit(text, 'secondsNum');
+  handleEditSeconds(text, idx) {
+    this._handleEdit(text, idx, 'secondsNum');
   }
 
-  _handleEdit(text, hand) {
+  // Update the given hand for the timer at the given index.
+  _handleEdit(text, idx, hand) {
+    if (this.state.sessionInProgress) {
+      // Extra precaution. Timers don't handle touches during a session.
+      // Later maybe timers that haven't yet started can be edited mid-session.
+      return;
+    }
     const asNumber = utils.textInputToTwoDigitNumber(text);
-    this.setState({[hand]: asNumber});
+
+    const oldList = this.state.timersList;
+    const oldTimer = oldList[idx];
+    // Copy the old timer and overwrite the given hand.
+    const newTimer = {...oldTimer, [hand]: asNumber};
+    // Replace the timer at the given index.
+    const newList = oldList.slice(0, idx).concat(
+      [newTimer], oldList.slice(idx + 1),
+    );
+    this.setState({timersList: newList});
+  }
+
+  handleAddTimer() {
+    this.addTimer();
+  }
+
+  buildTimers() {
+    return (
+      <View style={styles.timerContainer}>
+        <FlatList
+          contentContainerStyle={styles.timerListContentContainer}
+          data={this.state.timersList}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={
+            (data) => {
+              return this.buildTimer(
+                data.item.minutesNum,
+                data.item.secondsNum,
+                data.index,
+              );
+            }
+          }
+        />
+      </View>
+    );
+  }
+
+  buildTimer(minutesNum, secondsNum, idx) {
+    return <
+        TimerView
+        idx={idx}
+        minutesNum={minutesNum}
+        secondsNum={secondsNum}
+        handleEditMinutes={this.handleEditMinutes}
+        handleEditSeconds={this.handleEditSeconds}
+        secondsRemaining={this.state.secondsRemaining}
+        sessionInProgress={this.state.sessionInProgress}
+      />
   }
 
   render() {
+    const TimerFlatList = this.buildTimers();
+
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
+        <View style={styles.timersListContainer}>
 
-        <
-          TimerView
-          minutesNum={this.state.minutesNum}
-          secondsNum={this.state.secondsNum}
-          handleEditMinutes={this.handleEditMinutes}
-          handleEditSeconds={this.handleEditSeconds}
-          secondsRemaining={this.state.secondsRemaining}
-          sessionInProgress={this.state.sessionInProgress}
-        />
+        {TimerFlatList}
+
+        <Button title='+' style={styles.timer} onPress={this.handleAddTimer}/>
 
         <
           ButtonView

@@ -17,9 +17,6 @@ const getSecondsHand = secondsRemaining => {
 };
 
 const utils = {
-  getMinutesHand,
-  getSecondsHand,
-
   buildTimeRemainingText: secondsRemaining => {
     const minutesHand = getMinutesHand(secondsRemaining);
     const secondsHand = getSecondsHand(secondsRemaining);

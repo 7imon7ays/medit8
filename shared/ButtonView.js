@@ -3,11 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 
 import styles from './styles';
 
-const ButtonView = ({
-  sessionInProgress,
-  beginSession,
-  stopSession,
-}) => {
+const ButtonView = ({sessionInProgress, beginSession, stopSession}) => {
   return (
     <View>
       { !sessionInProgress &&
