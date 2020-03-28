@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 
+import {List, Map} from 'immutable';
 import Sound from 'react-native-sound';
 // https://github.com/ocetnik/react-native-background-timer
 import BackgroundTimer from 'react-native-background-timer';
@@ -25,7 +26,7 @@ import utils from './shared/utils';
 
 
 const ONE_SEC_IN_MILLI = 1000;
-const DEFAULT_MN_SECS = {minutesNum: 0, secondsNum: 5};
+const DEFAULT_MN_SECS = Map({minutesNum: 0, secondsNum: 5});
 
 
 export default class App extends Component {
@@ -37,7 +38,7 @@ export default class App extends Component {
     this.state = {
       secondsRemaining: 0,
       sessionInProgress: false,
-      timersList: [DEFAULT_MN_SECS],
+      timersList: List([DEFAULT_MN_SECS]),
     };
 
     this.initializeSound();
@@ -64,8 +65,10 @@ export default class App extends Component {
   }
 
   startTimer() {
-    const currentTimer = this.state.timersList[0];
-    const secondsRemaining = currentTimer.minutesNum*60 + currentTimer.secondsNum;
+    const currentTimer = this.state.timersList.get(0);
+    const secondsRemaining = currentTimer.get(
+      'minutesNum',
+    ) * 60 + currentTimer.get('secondsNum');
     this.setState({secondsRemaining});
 
     this._interval = BackgroundTimer.setInterval(() => {
@@ -80,16 +83,8 @@ export default class App extends Component {
 
   addTimer() {
     this.setState({
-      timersList: this.state.timersList.concat([DEFAULT_MN_SECS]),
+      timersList: this.state.timersList.push(DEFAULT_MN_SECS),
     });
-  }
-
-  // Safely unshift first timer.
-  // TODO: Currently unused.
-  unshiftTimers() {
-    const oldState = this.state;
-    this.setState({timersList: oldState.timersList.slice(1)});
-    return oldState.timersList[0];
   }
 
   beginSession() {
@@ -130,17 +125,11 @@ export default class App extends Component {
       // Later maybe timers that haven't yet started can be edited mid-session.
       return;
     }
-    const asNumber = utils.textInputToTwoDigitNumber(text);
+    const asNumber = utils.textInputToTwoDigitNumber(text),
+          newTimer = this.state.timersList.get(idx).set(hand, asNumber),
+          timersList = this.state.timersList.set(idx, newTimer);
 
-    const oldList = this.state.timersList;
-    const oldTimer = oldList[idx];
-    // Copy the old timer and overwrite the given hand.
-    const newTimer = {...oldTimer, [hand]: asNumber};
-    // Replace the timer at the given index.
-    const newList = oldList.slice(0, idx).concat(
-      [newTimer], oldList.slice(idx + 1),
-    );
-    this.setState({timersList: newList});
+    this.setState({timersList});
   }
 
   handleAddTimer() {
@@ -152,7 +141,7 @@ export default class App extends Component {
       <View style={styles.timerContainer}>
         <FlatList
           contentContainerStyle={styles.timerListContentContainer}
-          data={this.state.timersList}
+          data={this.state.timersList.toJS()}
           keyExtractor={(item, index) => index.toString()}
           renderItem={
             (data) => {
