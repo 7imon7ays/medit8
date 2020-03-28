@@ -24,18 +24,22 @@ export default class TimerView extends Component {
     this.props.handleEditSeconds(text, this.props.idx);
   }
 
-  // TODO: Only countdown the timer with index 0.
-  // Other timers should be still and optionally editable.
+  isCurrentTimer() {
+    return this.props.idx === 0;
+  }
+
   render() {
     const timeRemainingText = utils.buildTimeRemainingText(
       this.props.secondsRemaining,
     );
 
+    const isRunning = this.props.sessionInProgress && this.isCurrentTimer();
+
     return (
       <View>
 
         {
-          !this.props.sessionInProgress &&
+          !isRunning &&
           <View style={{flexDirection: 'row'}}>
             <TextInput style={styles.timer}
               keyboardType='numeric'
@@ -55,9 +59,8 @@ export default class TimerView extends Component {
           </View>
         }
 
-
         {
-          this.props.sessionInProgress &&
+          isRunning &&
           <Text style={styles.timer}>{timeRemainingText}</Text>
         }
 
