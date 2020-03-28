@@ -8,7 +8,6 @@
 import React, {Component} from 'react';
 import {
   Button,
-  FlatList,
   Keyboard,
   TouchableWithoutFeedback,
   View,
@@ -21,6 +20,7 @@ import BackgroundTimer from 'react-native-background-timer';
 
 import ButtonView from './shared/ButtonView';
 import TimerView from './shared/TimerView';
+import TimersListView from './shared/TimersListView';
 import styles from './shared/styles';
 import utils from './shared/utils';
 
@@ -48,7 +48,6 @@ export default class App extends Component {
     this.handleEditMinutes = this.handleEditMinutes.bind(this);
     this.handleEditSeconds = this.handleEditSeconds.bind(this);
     this.handleAddTimer = this.handleAddTimer.bind(this);
-    this.buildTimer = this.buildTimer.bind(this);
   }
 
   initializeSound() {
@@ -136,48 +135,19 @@ export default class App extends Component {
     this.addTimer();
   }
 
-  buildTimers() {
-    return (
-      <View style={styles.timerContainer}>
-        <FlatList
-          contentContainerStyle={styles.timerListContentContainer}
-          data={this.state.timersList.toJS()}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={
-            (data) => {
-              return this.buildTimer(
-                data.item.minutesNum,
-                data.item.secondsNum,
-                data.index,
-              );
-            }
-          }
-        />
-      </View>
-    );
-  }
-
-  buildTimer(minutesNum, secondsNum, idx) {
-    return <
-        TimerView
-        idx={idx}
-        minutesNum={minutesNum}
-        secondsNum={secondsNum}
-        handleEditMinutes={this.handleEditMinutes}
-        handleEditSeconds={this.handleEditSeconds}
-        secondsRemaining={this.state.secondsRemaining}
-        sessionInProgress={this.state.sessionInProgress}
-      />
-  }
-
   render() {
-    const TimerFlatList = this.buildTimers();
-
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.timersListContainer}>
 
-        {TimerFlatList}
+        <
+          TimersListView
+          timersArr={this.state.timersList.toJS()}
+          handleEditSeconds={this.handleEditSeconds}
+          handleEditMinutes={this.handleEditMinutes}
+          secondsRemaining={this.state.secondsRemaining}
+          sessionInProgress={this.state.sessionInProgress}
+        />
 
         <Button title='+' style={styles.timer} onPress={this.handleAddTimer}/>
 
