@@ -69,15 +69,28 @@ export default class App extends Component {
       'minutesNum',
     ) * 60 + currentTimer.get('secondsNum');
     this.setState({secondsRemaining});
+    this.countDown();
+  }
 
+  countDown() {
     this._interval = BackgroundTimer.setInterval(() => {
       this.setState({secondsRemaining: this.state.secondsRemaining - 1});
-
       if (this.state.secondsRemaining < 1) {
-        this.stopSession();
-        this.chime();
+        this.advanceTimers();
       }
     }, ONE_SEC_IN_MILLI);
+  }
+
+  advanceTimers() {
+    this.clearTimerInterval();
+    if (this.state.timersList.size < 2) {
+      this.stopSession();
+      // TODO: Chime with a different sound to mark session end.
+      this.chime();
+      return
+    }
+    this.setState({timersList: this.state.timersList.shift()});
+    this.startTimer();
   }
 
   addTimer() {
