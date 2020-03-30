@@ -110,7 +110,7 @@ export default class App extends Component {
     });
   }
 
-  // TODO: Button to remove timers.
+  // TODO: Button to remove any timer that isn't the first.
 
   beginSession() {
     this.chime();
