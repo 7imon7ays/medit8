@@ -25,8 +25,9 @@ import styles from './shared/styles';
 import utils from './shared/utils';
 
 
-const ONE_SEC_IN_MILLI = 1000;
 const DEFAULT_MN_SECS = Map({minutesNum: 0, secondsNum: 5});
+const INITIAL_TIMER_IDX = -1;  // Start negative so we're always adding 1.
+const ONE_SEC_IN_MILLI = 1000;
 
 
 export default class App extends Component {
@@ -36,7 +37,7 @@ export default class App extends Component {
     this._interval = null;
 
     this.state = {
-      currentTimerIdx: -1,  // Start negative so we're always adding 1.
+      currentTimerIdx: INITIAL_TIMER_IDX,
       secondsRemaining: 0,
       sessionInProgress: false,
       timersList: List([DEFAULT_MN_SECS]),
@@ -81,13 +82,14 @@ export default class App extends Component {
   }
 
   _canAdvanceTimer() {
-    this.setState({currentTimerIdx: this.state.currentTimerIdx + 1});
+    const currentTimerIdx = this.state.currentTimerIdx + 1;
+    this.setState({currentTimerIdx});
 
-    if (this.state.currentTimerIdx >= this.state.timersList.count()) {
+    if (currentTimerIdx >= this.state.timersList.count()) {
       return false;
     }
 
-    let currentTimer = this.state.timersList.get(this.state.currentTimerIdx),
+    let currentTimer = this.state.timersList.get(currentTimerIdx),
         minsRemaining = currentTimer.get('minutesNum'),
         secsRemaining = currentTimer.get('secondsNum');
 
@@ -121,17 +123,16 @@ export default class App extends Component {
     })
   }
 
+  // TODO: Support pausing sessions.
   stopSession() {
     this.resetTimer();
     this.setState({
+      currentTimerIdx: INITIAL_TIMER_IDX,
       sessionInProgress: false
     });
   }
 
   resetTimer() {
-    this.setState({
-      sessionInProgress: false,
-    });
     this.clearTimerInterval()
   }
 
