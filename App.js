@@ -66,44 +66,40 @@ export default class App extends Component {
   }
 
   runTimers() {
-    this._canAdvanceTimer();
+    let secondsRemaining = this._advanceTimer();
+    this.setState({secondsRemaining}, this.chime);
 
     this._interval = BackgroundTimer.setInterval(() => {
-      if (this.state.secondsRemaining < 1) {
+      if (secondsRemaining < 1) {
         this.chime();
-        if (!this._canAdvanceTimer()) {
+        secondsRemaining = this._advanceTimer();
+        if (secondsRemaining < 1) {
           // TODO: Session is over. Chime with a different sound.
           this.stopSession();
           return;
         }
       }
-      this._tick();
+      secondsRemaining--;
+      // State update required to trigger re-render only.
+      this.setState({secondsRemaining});
     }, ONE_SEC_IN_MILLI);
   }
 
-  _canAdvanceTimer() {
+  _advanceTimer() {
     const currentTimerIdx = this.state.currentTimerIdx + 1;
     this.setState({currentTimerIdx});
 
     if (currentTimerIdx >= this.state.timersList.count()) {
-      return false;
+      // Ran through all timers.
+      return 0;
     }
 
     let currentTimer = this.state.timersList.get(currentTimerIdx),
         minsRemaining = currentTimer.get('minutesNum'),
         secsRemaining = currentTimer.get('secondsNum');
 
-    this.setState({
-      secondsRemaining: utils.addTimeRemaining(
-        minsRemaining, secsRemaining,
-      ),
-    });
 
-    return true;
-  }
-
-  _tick() {
-    this.setState({secondsRemaining: this.state.secondsRemaining - 1});
+    return utils.addTimeRemaining(minsRemaining, secsRemaining);
   }
 
   addTimer() {
@@ -115,7 +111,6 @@ export default class App extends Component {
   // TODO: Button to remove any timer that isn't the first.
 
   beginSession() {
-    this.chime();
     this.runTimers();
 
     this.setState({
