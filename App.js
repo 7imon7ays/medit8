@@ -36,6 +36,7 @@ export default class App extends Component {
     this._interval = null;
 
     this.state = {
+      currentTimerIdx: -1,  // Start negative so we're always adding 1.
       secondsRemaining: 0,
       sessionInProgress: false,
       timersList: List([DEFAULT_MN_SECS]),
@@ -64,26 +65,29 @@ export default class App extends Component {
   }
 
   runTimers() {
-    let idx = 0;
-    this._advanceTimer(idx);
+    this._canAdvanceTimer();
 
     this._interval = BackgroundTimer.setInterval(() => {
       if (this.state.secondsRemaining < 1) {
         this.chime();
-        idx++;
-        if (idx >= this.state.timersList.count()) {
-          // TODO: Chime with a different sound when entire session is over.
+        if (!this._canAdvanceTimer()) {
+          // TODO: Session is over. Chime with a different sound.
           this.stopSession();
           return;
         }
-        this._advanceTimer(idx);
       }
       this._tick();
     }, ONE_SEC_IN_MILLI);
   }
 
-  _advanceTimer(idx) {
-    let currentTimer = this.state.timersList.get(idx),
+  _canAdvanceTimer() {
+    this.setState({currentTimerIdx: this.state.currentTimerIdx + 1});
+
+    if (this.state.currentTimerIdx >= this.state.timersList.count()) {
+      return false;
+    }
+
+    let currentTimer = this.state.timersList.get(this.state.currentTimerIdx),
         minsRemaining = currentTimer.get('minutesNum'),
         secsRemaining = currentTimer.get('secondsNum');
 
@@ -92,6 +96,8 @@ export default class App extends Component {
         minsRemaining, secsRemaining,
       ),
     });
+
+    return true;
   }
 
   _tick() {
