@@ -63,34 +63,39 @@ export default class App extends Component {
     this.chimeSound.play();
   }
 
-  startTimer() {
-    const currentTimer = this.state.timersList.get(0);
-    const secondsRemaining = currentTimer.get(
-      'minutesNum',
-    ) * 60 + currentTimer.get('secondsNum');
-    this.setState({secondsRemaining});
-    this.countDown();
-  }
+  runTimers() {
+    let idx = 0;
+    this._advanceTimer(idx);
 
-  countDown() {
     this._interval = BackgroundTimer.setInterval(() => {
-      this.setState({secondsRemaining: this.state.secondsRemaining - 1});
       if (this.state.secondsRemaining < 1) {
-        this.advanceTimers();
+        this.chime();
+        idx++;
+        if (idx >= this.state.timersList.count()) {
+          // TODO: Chime with a different sound when entire session is over.
+          this.stopSession();
+          return;
+        }
+        this._advanceTimer(idx);
       }
+      this._tick();
     }, ONE_SEC_IN_MILLI);
   }
 
-  advanceTimers() {
-    this.clearTimerInterval();
-    if (this.state.timersList.size < 2) {
-      this.stopSession();
-      // TODO: Chime with a different sound to mark session end.
-      this.chime();
-      return
-    }
-    this.setState({timersList: this.state.timersList.shift()});
-    this.startTimer();
+  _advanceTimer(idx) {
+    let currentTimer = this.state.timersList.get(idx),
+        minsRemaining = currentTimer.get('minutesNum'),
+        secsRemaining = currentTimer.get('secondsNum');
+
+    this.setState({
+      secondsRemaining: utils.addTimeRemaining(
+        minsRemaining, secsRemaining,
+      ),
+    });
+  }
+
+  _tick() {
+    this.setState({secondsRemaining: this.state.secondsRemaining - 1});
   }
 
   addTimer() {
@@ -99,9 +104,11 @@ export default class App extends Component {
     });
   }
 
+  // TODO: Button to remove timers.
+
   beginSession() {
     this.chime();
-    this.startTimer();
+    this.runTimers();
 
     this.setState({
       sessionInProgress: true

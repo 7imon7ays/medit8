@@ -31,6 +31,8 @@ const utils = {
 
     return numChars === '' ? 0 : parseInt(numChars);
   },
+
+  addTimeRemaining: (mins, secs) => {return mins * 60 + secs},
 };
 
 export default utils;
