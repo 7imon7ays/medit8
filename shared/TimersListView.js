@@ -13,6 +13,7 @@ export default class TimersListView extends Component {
         idx={idx}
         minutesNum={minutesNum}
         secondsNum={secondsNum}
+        currentTimerIdx={this.props.currentTimerIdx}
         handleEditMinutes={this.props.handleEditMinutes}
         handleEditSeconds={this.props.handleEditSeconds}
         secondsRemaining={this.props.secondsRemaining}

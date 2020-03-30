@@ -169,6 +169,7 @@ export default class App extends Component {
         <
           TimersListView
           timersArr={this.state.timersList.toJS()}
+          currentTimerIdx={this.state.currentTimerIdx}
           handleEditSeconds={this.handleEditSeconds}
           handleEditMinutes={this.handleEditMinutes}
           secondsRemaining={this.state.secondsRemaining}

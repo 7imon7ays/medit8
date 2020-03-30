@@ -8,7 +8,8 @@ import utils from './utils';
 
 export default class TimerView extends Component {
   isRunning() {
-    return this.props.sessionInProgress && this.props.idx === 0;
+    return (this.props.sessionInProgress &&
+      this.props.idx === this.props.currentTimerIdx);
   }
 
   render() {
